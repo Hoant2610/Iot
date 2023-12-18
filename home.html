@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        Nhiet Do :
+        <span id='temperature'>__TEMPERATURE__</span>
+    </div>
+    <div>
+        Do Am :
+        <span id='humidity'>__HUMIDITY__</span>
+    </div>
+    <div>
+        Luong Mua :
+        <span id='rainfall'>__RAINFALL__</span>
+    </div>
+    <div>
+      Trang thai chay :
+      <span id='fire'>__FIRE__</span>
+  </div>    
+    <div>
+        <button type='button' id='On-Auto'>On-Auto</button>
+        <button type='button' id='Off-Auto'>Off-Auto</button>
+        <span id='led_state'>Auto-State</span>
+    </div>
+    <div>
+        <button type='button' id='On-ControlStep'>On-ControlStep</button>
+        <button type='button' id='Off-ControlStep'>Off-ControlStep</button>
+        <span id='stepState'>Step-State</span>
+    </div>
+    <div>
+        <button type='button' id='On-ControlRelay'>On-ControlRelay</button>
+        <button type='button' id='Off-ControlRelay'>Off-ControlRelay</button>
+        <span id='relayState'>Relay-State</span>
+    </div>
+    <div>
+        <button type='button' id='On-Led1'>On-Led1</button>
+        <button type='button' id='Off-Led1'>Off-Led1</button>
+        <span id='led1State'>Led1-State</span>
+    </div>
+    <div>
+        <button type='button' id='On-Led2'>On-Led2</button>
+        <button type='button' id='Off-Led2'>Off-Led2</button>
+        <span id='led2State'>Led2-State</span>
+    </div>
+    <div>
+      <button type='button' id='On-FireAlarm'>On-FireAlarm</button>
+      <button type='button' id='Off-FireAlarm'>Off-FireAlarm</button>
+      <span id='fireAlarmState'>Fire-alarm</span>
+  </div>
+</body>
+<script>
+    var Socket;
+    document.getElementById('On-Auto').addEventListener('click', OnAuto_pressed);
+    document.getElementById('Off-Auto').addEventListener('click', OffAuto_pressed);
+    document.getElementById('On-ControlStep').addEventListener('click', OnControlStep_pressed);
+    document.getElementById('Off-ControlStep').addEventListener('click', OffControlStep_pressed);
+    document.getElementById('On-ControlRelay').addEventListener('click', OnControlRelay_pressed);
+    document.getElementById('Off-ControlRelay').addEventListener('click', OffControlRelay_pressed);
+
+    document.getElementById('On-Led1').addEventListener('click', OnLed1_pressed);
+    document.getElementById('Off-Led1').addEventListener('click', OffLed1_pressed);
+    document.getElementById('On-Led2').addEventListener('click', OnLed2_pressed);
+    document.getElementById('Off-Led2').addEventListener('click', OffLed2_pressed);
+    document.getElementById('On-FireAlarm').addEventListener('click', OnFireAlarm_pressed);
+    document.getElementById('Off-FireAlarm').addEventListener('click', OffFireAlarm_pressed);
+    function init() {
+        Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+        Socket.onmessage = function (event) {
+            processCommand(event);
+        };
+    }
+    function processCommand(event) {
+        var obj = JSON.parse(event.data);
+        document.getElementById('led_state').innerHTML = obj.PIN_Status;
+        document.getElementById('temperature').innerHTML = obj.Temp;
+        document.getElementById('humidity').innerHTML = obj.Hum;
+        document.getElementById('rainfall').innerHTML = obj.Rain;
+        document.getElementById('stepState').innerHTML = obj.StepState;
+        document.getElementById('relayState').innerHTML = obj.RelayState;
+        document.getElementById('led1State').innerHTML = obj.Led1State;
+        document.getElementById('led2State').innerHTML = obj.Led2State;
+        document.getElementById('fireAlarmState').innerHTML = obj.fireAlarmState;
+        console.log(obj.PIN_Status);
+        console.log(obj.Temp);
+        console.log(obj.Hum);
+        console.log(obj.Rain);
+        console.log(obj.StepState);
+        console.log(obj.RelayState);
+        console.log(obj.Led1State);
+        console.log(obj.Led2State);
+        console.log(obj.FireAlarmState);
+    }
+    function OnAuto_pressed() {
+        Socket.send('On-Auto');
+    }
+    function OffAuto_pressed() {
+        Socket.send('Off-Auto');
+    }
+    function OnControlStep_pressed() {
+        Socket.send('On-ControlStep');
+    }
+    function OffControlStep_pressed() {
+        Socket.send('Off-ControlStep');
+    }
+    function OnControlRelay_pressed() {
+        Socket.send('On-ControlRelay');
+    }
+    function OffControlRelay_pressed() {
+        Socket.send('Off-ControlRelay');
+    }
+//Manh          
+    function OnLed1_pressed() {
+        Socket.send('On-Led1');
+    }
+    function OffLed1_pressed() {
+        Socket.send('Off-Led1');
+    }
+    function OnLed2_pressed() {
+        Socket.send('On-Led2');
+    }
+    function OffLed2_pressed() {
+        Socket.send('Off-Led2');
+    } 
+    function OnFireAlarm_pressed() {
+        Socket.send('On-FireAlarm');
+    }
+    function OffFireAlarm_pressed() {
+        Socket.send('Off-FireAlarm');
+    }
+
+    window.onload = function (event) {
+        init();
+    }
+</script>
+</html>
